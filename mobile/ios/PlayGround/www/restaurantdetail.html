@@ -13,13 +13,13 @@
 		<ul data-role="listview" data-inset="true">
 			<li data-role="fieldcontain">
 				<a id="weblink" class="external">
-					<h2 id="phone"></h2>
+					<h2 id="phone" class="icon_phone"></h2>
 					<p id="url"></p>
 				</a>
 			</li>
 			<li data-role="fieldcontain">
 				<a id="maplink">
-					<h2 id="address"></h2>
+					<h2 id="address" class="icon_address"></h2>
 					<p id="direction"></p>
 				</a>
 			</li>
@@ -34,14 +34,14 @@
 		</ul>
 		
 		<ul data-role="listview" data-inset="true" id="attributes" data-theme="d" class="postcontent">
-			<li data-role="fieldcontain" id="area"></li>
-			<li data-role="fieldcontain" id="culture"></li>
-			<li data-role="fieldcontain" id="dishes"></li>
-			<li data-role="fieldcontain" id="avgprice"></li>
-			<li data-role="fieldcontain" id="timeframe"></li>
-			<li data-role="fieldcontain" id="purpose"></li>
-			<li data-role="fieldcontain" id="capacity"></li>
-			<!-- <li data-role="fieldcontain" id="servingtime"></li>
+			<li data-role="fieldcontain" id="area" class="icon_location" style="padding-left:30px;"></li>
+			<li data-role="fieldcontain" id="culture" class="icon_country" style="padding-left:30px;"></li>
+			<li data-role="fieldcontain" id="dishes" class="icon_list" style="padding-left:30px;"></li>
+			<li data-role="fieldcontain" id="avgprice" class="icon_money" style="padding-left:30px;"></li>
+			<!-- <li data-role="fieldcontain" id="timeframe" style="padding-left:30px;"></li>
+			<li data-role="fieldcontain" id="purpose" style="padding-left:30px;"></li>
+			<li data-role="fieldcontain" id="capacity" style="padding-left:30px;"></li>
+			<li data-role="fieldcontain" id="servingtime"></li>
 			<li data-role="fieldcontain" id="holiday"></li>
 			<li data-role="fieldcontain" id="est"></li> -->
 		</ul>
@@ -65,13 +65,13 @@
 				$('p#direction').html(cached_post.direction);
 				$('li#content').html(cached_post.content.replace("\n",'<br/><br/>'));
 				$('a#maplink').attr('href','map.html?post_id=' + post_id + '&section=restaurant');
-				$('li#area').html('<strong>Khu vực</strong> ' + cached_post.area);
-				$('li#culture').html('<strong>Văn hoá ẩm thực</strong> ' + cached_post.culture);
-				$('li#dishes').html('<strong>Các món</strong> ' + cached_post.dishes);
-				$('li#timeframe').html('<strong>Thời gian phục vụ: </strong> ' + cached_post.timeframe);
-				$('li#avgprice').html('<strong>Mức giá trung bình: </strong> ' + cached_post.avgprice);
-				$('li#purpose').html('<strong>Phù hợp </strong> ' + cached_post.purpose);
-				$('li#capacity').html('<strong>Sức chứa</strong> ' + cached_post.capacity);
+				$('li#area').html('<strong>Khu vực:</strong> ' + isNullOrEmpty(cached_post.area, "Đang cập nhật"));
+				$('li#culture').html('<strong>Văn hoá ẩm thực:</strong> ' + isNullOrEmpty(cached_post.culture, "Đang cập nhật"));
+				$('li#dishes').html('<strong>Các món:</strong> ' + isNullOrEmpty(cached_post.dishes, "Đang cập nhật"));
+				//$('li#timeframe').html('<strong>Thời gian phục vụ:</strong> ' + isNullOrEmpty(cached_post.timeframe, "Đang cập nhật"));
+				$('li#avgprice').html('<strong>Mức giá trung bình:</strong> ' + isNullOrEmpty(cached_post.avgprice, "Đang cập nhật"));
+				//$('li#purpose').html('<strong>Phù hợp:</strong> ' + isNullOrEmpty(cached_post.purpose, "Đang cập nhật"));
+				//$('li#capacity').html('<strong>Sức chứa:</strong> ' + isNullOrEmpty(cached_post.capacity, "Đang cập nhật"));
 				// $('li#servingtime').html('<strong>Thời gian chuẩn bị món: </strong> ' + cached_post.servingtime);
 				// $('li#holiday').html('<strong>Nghỉ lễ:</strong> ' + cached_post.holiday);
 				// $('li#est').html('<strong>Thành lập năm</strong> ' + cached_post.est);

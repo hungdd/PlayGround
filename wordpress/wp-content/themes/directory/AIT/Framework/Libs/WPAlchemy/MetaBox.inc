@@ -936,8 +936,14 @@ class WPAlchemy_MetaBox
 			<?php $this->textControl($key, $value); ?>
 		</td>
 		<?php endif; ?>
+		
+		<?php if($value['type'] == 'hidden'): ?>
+		<td>
+			<?php $this->hiddenControl($key, $value); ?>
+		</td>
+		<?php endif; ?>
 
-                <?php if($value['type'] == 'date'): ?>
+        <?php if($value['type'] == 'date'): ?>
 		<td>
 			<?php $this->dateControl($key, $value); ?>
 		</td>
@@ -1107,6 +1113,23 @@ class WPAlchemy_MetaBox
 
 		?>
 		<input type="text" id="ait-<?php echo $this->id . "-$key"; ?>" class="ait-<?php echo $key; ?>-option" name="<?php $this->the_name(); ?>" value="<?php $this->the_value($val); ?>">
+		<?php
+	}
+	
+	public function hiddenControl($key, $value)
+	{
+		$this->the_field($key);
+
+		$val = $this->get_the_value();
+
+		if(isset($_GET['post_type']) and empty($val) and isset($value['default'])){
+			$val = $value['default'];
+		}
+
+		if($val === null) $val = '';
+
+		?>
+		<input type="hidden" id="ait-<?php echo $this->id . "-$key"; ?>" class="ait-<?php echo $key; ?>-option" name="<?php $this->the_name(); ?>" value="<?php $this->the_value($val); ?>">
 		<?php
 	}
 

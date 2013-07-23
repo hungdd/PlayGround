@@ -134,3 +134,53 @@ div.ps-caption-content{
 .videogallery li object { display: block; margin: 5px; border: 1px solid #3c3c3c; }
 .videogallery li object embed { display: block; width: 100%; height: auto; }
 .videogallery .ui-content { overflow: hidden; }
+
+/*hungdd*/
+.icon_phone
+{
+    padding-left:21px;
+    background: transparent url('../img/icon_phone.png') no-repeat 0 0;
+}
+.icon_address
+{
+    padding-left:21px;
+    background: transparent url('../img/icon_address.png') no-repeat 0 0;
+}
+.icon_calendar
+{
+    background: #ffffff url('../img/icon_calendar.png') no-repeat 3px center;
+}
+.icon_clock
+{
+    background: #ffffff url('../img/icon_clock.png') no-repeat 3px center;
+}
+.icon_location
+{
+    background: #ffffff url('../img/icon_location.png') no-repeat 3px center;
+}
+.icon_music
+{
+    background: #ffffff url('../img/icon_music.png') no-repeat 3px center;
+}
+.icon_people
+{
+    background: #ffffff url('../img/icon_people.png') no-repeat 3px center;
+}
+.icon_money
+{
+    background: #ffffff url('../img/icon_money.png') no-repeat 3px center;
+}
+.icon_country
+{
+    background: #ffffff url('../img/icon_country.png') no-repeat 3px center;
+}
+.icon_list
+{
+    background: #ffffff url('../img/icon_list.png') no-repeat 3px center;
+}
+.icon_sale
+{
+    padding-left:21px;
+    background: transparent url('../img/icon_sale.png') no-repeat 15px center;
+}
+/*end hungdd*/

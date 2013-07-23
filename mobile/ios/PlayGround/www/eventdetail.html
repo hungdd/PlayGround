@@ -12,7 +12,7 @@
 			<li data-role="fieldcontain">
 				<a id="venuelink">
 					<h2 id="venuename"></h2>
-					<p id="venueaddress"></p>
+					<p id="venueaddress" class="icon_address" style="padding-top:3px;"></p>
 				</a>
 			</li>
 		</ul>
@@ -23,12 +23,12 @@
 		</ul>
 		
 		<ul data-role="listview" data-inset="true" id="attributes" data-theme="d" class="postcontent">
-			<li data-role="fieldcontain" id="date"></li>
-			<li data-role="fieldcontain" id="time"></li>
-			<li data-role="fieldcontain" id="area"></li>
-			<li data-role="fieldcontain" id="event_types"></li>
-			<li data-role="fieldcontain" id="capacity"></li>
-			<li data-role="fieldcontain" id="ticketprice"></li>
+			<li data-role="fieldcontain" class="icon_calendar" id="date" style="padding-left:30px;"></li>
+			<li data-role="fieldcontain" class="icon_clock" id="time" style="padding-left:30px;"></li>
+			<li data-role="fieldcontain" class="icon_location" id="area" style="padding-left:30px;"></li>
+			<li data-role="fieldcontain" class="icon_music" id="event_types" style="padding-left:30px;"></li>
+			<li data-role="fieldcontain" class="icon_people" id="capacity" style="padding-left:30px;"></li>
+			<li data-role="fieldcontain" class="icon_money" id="ticketprice" style="padding-left:30px;"></li>
 		</ul>
 	</div><!-- /content -->
 	
@@ -46,12 +46,12 @@
 				$('a#venuelink').attr('href',venue_type + 'detail.html?post_id=' + cached_post.venue.id);
 				$('li#content').html(cached_post.content.replace("\n",'<br/><br/>'));
 				$('li#content *').css('max-width','100%').css('height','auto');
-				$('li#area').html('<strong>Khu vực</strong> ' + cached_post.area);
-				$('li#event_types').html('<strong>Loại Sự Kiện:</strong> ' + cached_post.event_types);
-				$('li#capacity').html('<strong>Số lượng chỗ:</strong> ' + cached_post.capacity);
-				$('li#ticketprice').html('<strong>Giá vé:</strong> ' + cached_post.ticketprice);
-				$('li#date').html('<strong>Ngày tổ chức:</strong> ' + cached_post.date);
-				$('li#time').html('<strong>Thời gian tổ chức:</strong> ' + cached_post.time);
+				$('li#area').html('<strong>Khu vực:</strong> ' + isNullOrEmpty(cached_post.area, "Đang cập nhật"));
+				$('li#event_types').html('<strong>Loại Sự Kiện:</strong> ' + isNullOrEmpty(cached_post.event_types, "Đang cập nhật"));
+				$('li#capacity').html('<strong>Số lượng chỗ:</strong> ' + isNullOrEmpty(cached_post.capacity, "Đang cập nhật"));
+				$('li#ticketprice').html('<strong>Giá vé:</strong> ' + isNullOrEmpty(cached_post.ticketprice, "Đang cập nhật"));
+				$('li#date').html('<strong>Ngày tổ chức:</strong> ' + isNullOrEmpty(cached_post.date, "Đang cập nhật"));
+				$('li#time').html('<strong>Thời gian tổ chức:</strong> ' + isNullOrEmpty(cached_post.time, "Đang cập nhật"));
 				
 				$('a#sharepagelink').attr('href','share.html?post_id='+cached_post.id);
 			}

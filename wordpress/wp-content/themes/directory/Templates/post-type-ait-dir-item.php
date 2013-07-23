@@ -47,6 +47,40 @@
 	{include 'snippets/map-javascript.php'}
 
 	<div class="category-items clearfix">
+    <?php if ($is_all):?>
+        
+            <?php foreach ($posts as $item):?>
+            <ul class="items">
+			<li class="item clear <?php echo $item['packageClass'];?>">
+				<div class="thumbnail">
+					<img width="100" height="100" src="<?php echo $item['image'];?>" alt="<?php echo $item['title'];?>">
+					<div class="comment-count"><?php echo $item['comment_count']; ?></div>
+				</div>
+				
+				<div class="description">
+					<h3>
+						<a href="<?php echo $item['link'];?>"><?php echo $item['title'];?></a>
+						<span class="rating">
+							<?php for ($i = 1; $i <= $item['rating']['max']; $i++ ){
+							     if ($i <= $item['rating']['val']) {
+							          echo '<span class="star active"></span>';
+							     } else {
+							         echo '<span class="star"></span>';
+							     }
+								
+                                }
+							?>
+						</span>
+
+					</h3>
+                    <p>
+					<?php echo $item['excerpt'];?>
+                    </p>
+				</div>
+			</li></ul>
+            <?php endforeach;?>
+		
+    <?php else: ?>
 		<ul n:foreach="$posts as $item" class="items">
 			<li class="item clear{ifset $item->packageClass} {$item->packageClass}{/ifset}">
 				{if $item->thumbnailDir}
@@ -71,6 +105,7 @@
 				</div>
 			</li>
 		</ul>
+    <?php endif;?>
 	</div>
 	
 	{willPaginate}

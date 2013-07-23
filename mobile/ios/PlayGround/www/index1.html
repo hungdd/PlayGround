@@ -14,7 +14,8 @@
 		<link rel="stylesheet"  href="assets/css/photoSwipe/photoswipe.css">
 		
 		<script src="assets/js/jquery-1.10.1.min.js"></script>
-		<script src="assets/js/cordova.android.js"></script>
+		<script src="assets/js/cordova.ios.js"></script>
+		<script src="assets/js/SMSComposer.js"></script>
 		<script src="assets/js/jsonrpc.js"></script>
 		<script src="assets/js/playground.js"></script>
 		<script src="assets/js/jquery.mobile-1.3.1.min.js"></script>
@@ -24,103 +25,21 @@
 	</head>
 	<body>
 		<div data-role="page" id="indexpage">
-			<div data-role="header" data-position="fixed" data-theme="b" id="header_bar">
+			<div data-role="header" data-position="fixed" data-theme="b">
 				<a href="#menu-panel" data-role="button" data-icon="bars" class="ui-icon-nodisc" data-theme="a" data-iconshadow="false" data-iconpos="notext" data-inline="true"></a>
 				<h1>PlayGround</h1>
 			</div><!-- /header -->
 			
-			<div data-role="content" id="page_content">
-				<ul data-role="listview" id="search_bar">
+			<div data-role="content">
+				<ul data-role="listview">
 					<li class="padding025em">
 						<form id="search-form" action="search.html">
 							<input type="search" name="search_term" id="search_term" value="" data-mini="true" placeholder="Tìm kiếm...">
 						</form>
 					</li>
 				</ul>
-				<div class="ui-grid-a grid-full-width grid-portfolio" id="list_functions">
-					<div class="ui-block-a">
-						<a href="nearby.html">
-							<div class="ui-bar ui-bar-b">
-								<img src="assets/img/portfolio-icon-around.png">
-								<p>Quanh đây</p>
-							</div>
-						</a>
-					</div>
-				    <div class="ui-block-b">
-				    	<a href="eventlist.html">
-							<div class="ui-bar ui-bar-b">
-								<img src="assets/img/portfolio-icon-event.png">
-								<p>Sự kiện</p>
-							</div>
-						</a>
-				    </div>
-				    <div class="ui-block-a">
-				    	<a href="filter.html">
-							<div class="ui-bar ui-bar-b">
-								<img src="assets/img/portfolio-icon-filter.png">
-								<p>Tìm</p>
-							</div>
-						</a>
-				    </div>
-				    <div class="ui-block-b">
-				    	<a href="restaurantlist.html">                                           
-							<div class="ui-bar ui-bar-b">                      
-								<img src="assets/img/portfolio-icon-restaurant.png">
-								<p>Ăn</p>                                     
-							</div>                                             
-						</a>                                                  
-				    </div>                                                     
-				    <div class="ui-block-a">
-				    	<a href="clublist.html">
-							<div class="ui-bar ui-bar-b">                      
-								<img src="assets/img/portfolio-icon-club.png">
-								<p>Chơi</p>                                     
-							</div>                                             
-						</a>                                              
-				    </div>                                                     
-				    <div class="ui-block-b">     
-				    	<a href="videogallery.html">
-							<div class="ui-bar ui-bar-b">                      
-								<img src="assets/img/portfolio-icon-movie.png">
-								<p>Xem</p>
-							</div>                                             
-						</a>        
-				    </div>
-					<div class="ui-block-a">                                
-				    	<a href="shoppinglist.html">
-							<div class="ui-bar ui-bar-b">                      
-								<img src="assets/img/portfolio-icon-shopping.png">
-								<p>Mua</p>                                     
-							</div>                                             
-						</a>                                         
-				    </div>                                                     
-				    <div class="ui-block-b">                            
-				    	<a href="#" class="under_construction">
-							<div class="ui-bar ui-bar-b">                      
-								<img src="assets/img/portfolio-icon-salon.png">
-								<p>Đẹp</p>
-							</div>                                             
-						</a>                                                    
-				    </div>                                                     
-				    <div class="ui-block-a">                                   
-				    	<a href="photogallery.html">                                           
-							<div class="ui-bar ui-bar-b">                      
-								<img src="assets/img/portfolio-icon-gallery.png">
-								<p>Ảnh</p>
-							</div>                                             
-						</a>      
-				    </div>
-				    <div class="ui-block-b">                                   
-				    	<a href="inbox.html">
-							<div class="ui-bar ui-bar-b">                      
-								<img src="assets/img/portfolio-icon-inbox.png">
-								<p>Thư</p>
-							</div>                                             
-						</a>
-				    </div>
-				</div>
-				<!--
-				<div class="ui-grid-b grid-full-width grid-portfolio" style="display:none;">
+				
+				<div class="ui-grid-b grid-full-width grid-portfolio">
 					<div class="ui-block-a">
 						<a href="nearby.html">
 							<div class="ui-bar ui-bar-c">
@@ -194,7 +113,6 @@
 						</a>
 				    </div>
 				</div>
-				-->
 			</div><!-- /content -->
 			
 			<div data-role="panel" id="menu-panel" data-theme="a">
@@ -216,7 +134,6 @@
             // device APIs are available
             //
             function onDeviceReady() {
-            	is_device_ready = true;
                 var firstRun = window.localStorage.getItem('playground_initialized');
                 if (firstRun == null){
                     $.mobile.changePage('setup.html',{transition:'pop'});
@@ -227,9 +144,7 @@
 					if (contactList.length <= 0){
 						getContacts();
 					}
-	            }
-
-	            //alert($("#header_bar").height() + " - " + $("#indexpage").height() + " - " + $("#page_content").height());
+                }
             }
             
 			$('div#indexpage').on('pageshow',function(){
