@@ -7,6 +7,28 @@ require_once dirname(__FILE__) . '/rating.php';
 /**
  * Directory Find in radius function
  **/
+ 
+function getDistance ($radiusInKm, $cenLat, $cenLng, $lat, $lng) {
+    $radiusInKm = intval($radiusInKm);
+	$cenLat = floatval($cenLat);
+	$cenLng = floatval($cenLng);
+	$lat = floatval($lat);
+	$lng = floatval($lng);
+    $ggmap = 'http://maps.googleapis.com/maps/api/distancematrix/json?sensor=false&';
+    $ggmap .= "origins=$cenLat,$cenLng&destinations=$lat,$lng";
+    $data = file_get_contents($ggmap);
+    $data = json_decode($data);
+    if (!empty($data) && $data->status == 'OK') {
+        $distance = intval($data->rows[0]->elements[0]->distance->value);
+        if ($distance <= ($radiusInKm*1000)) {
+            return $distance;
+        } else {
+            return false;
+        }
+    }
+    return false;
+}
+
 function isPointInRadius($radiusInKm, $cenLat, $cenLng, $lat, $lng)
 {
 	$radiusInKm = intval($radiusInKm);
@@ -16,7 +38,7 @@ function isPointInRadius($radiusInKm, $cenLat, $cenLng, $lat, $lng)
 	$lng = floatval($lng);
 	$distance = ( 6371 * acos( cos( deg2rad($cenLat) ) * cos( deg2rad( $lat ) ) * cos( deg2rad( $lng ) - deg2rad($cenLng) ) + sin( deg2rad($cenLat) ) * sin( deg2rad( $lat ) ) ) );
 	if($distance <= $radiusInKm){
-		return true;
+		return $distance;
 	} else {
 		return false;
 	}

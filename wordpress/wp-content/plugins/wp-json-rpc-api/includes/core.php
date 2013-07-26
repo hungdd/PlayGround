@@ -219,6 +219,10 @@ class WP_JSON_RPC_Server extends IXR_Server
 			'demo.addTwoNumbers' => 'this:addTwoNumbers',
 			
 			//PlayGround specialized functions
+            'pg.getWatchingList' => 'this:getWatchingList',
+			'pg.getWatching' => 'this:getWatching',
+            'pg.getBeautyList' => 'this:getBeautyList',
+			'pg.getBeauty' => 'this:getBeauty',
 			'pg.getClubList' => 'this:getClubList',
 			'pg.getClub' => 'this:getClub',
 			'pg.getRestaurantList' => 'this:getRestaurantList',
@@ -262,6 +266,266 @@ class WP_JSON_RPC_Server extends IXR_Server
 	}
 	
 	//start messing	
+    
+    function getWatchingList($args){
+        $event_types = array(
+            'xem', 'cinemas', 'shows'
+        );
+        $category_types = array('xem', 'cinemas', 'shows');
+        $query = array(
+			'post_type'=> array('ait-dir-item','ait-dir-event'),
+			'numberposts'=>10,
+			'offset'=>0,
+			'post_status'=> 'publish',
+            'orderby' => 'post_id',
+            'order' => 'desc',
+			'tax_query'=>array(
+                'relation' => 'OR',
+				array(
+					'taxonomy'=>'ait-dir-item-category',
+					'field'=>'slug',
+					'terms'=>$category_types,
+					'include_children'=>true
+				),
+                array(
+					'taxonomy'=>'event_types',
+					'field'=>'slug',
+					'terms'=> $event_types,
+					'include_children'=>true
+				),
+			)
+		);
+		$posts =  get_posts($query);
+                
+		$watching_list = array();
+		if ($posts){
+			foreach ($posts as $post) {
+			 		if ($post->post_type == 'ait-dir-event'){
+        				$place = $this->getEvent($post->ID);
+        				$place['type'] = 'event';
+        				array_push($watching_list,$place);
+        			} else {
+        				$category = wp_get_post_terms($post->ID,'ait-dir-item-category',array('fields'=>'slugs'));
+        				switch ($category[0]){
+        					case 'nha-hang':
+        						$place = $this->getRestaurant($post->ID);
+        						$place['type'] = 'restaurant';
+        						array_push($watching_list,$place);
+        						break;
+        					case 'mua-sam':
+        						$place = $this->getShopping($post->ID);
+        						$place['type'] = 'shopping';
+        						array_push($watching_list,$place);
+        						break;
+        					case 'barsclubs':
+        						$place = $this->getClub($post->ID);
+        						$place['type'] = 'club';
+        						array_push($watching_list,$place);
+        						break;
+                            default:
+                                $place = $this->getRestaurant($post->ID);
+        						$place['type'] = 'watching';
+        						array_push($watching_list,$place);
+        						break;
+        				}
+        			}
+			}
+		}
+		return $watching_list;
+	}
+	
+	function getWatching($args){
+		$this->escape( $args );
+		$post_id = $args;
+		$post = get_post($post_id);
+		$watching = false;
+		if ($post){
+            if ($post->post_type == 'ait-dir-event'){
+				$watching = $this->getEvent($post->ID);
+				$watching['type'] = 'event';
+			} else {
+				$category = wp_get_post_terms($post->ID,'ait-dir-item-category',array('fields'=>'slugs'));
+				switch ($category[0]){
+					case 'nha-hang':
+						$watching = $this->getRestaurant($post->ID);
+						$watching['type'] = 'restaurant';
+						break;
+					case 'mua-sam':
+						$watching = $this->getShopping($post->ID);
+						$watching['type'] = 'shopping';
+						break;
+					case 'barsclubs':
+						$watching = $this->getClub($post->ID);
+						$watching['type'] = 'club';
+						break;
+                    default:
+                        $watching = $this->getRestaurant($post->ID);
+						$watching['type'] = 'watching';
+						break;
+				}
+			}
+		}
+		return $watching;
+	}
+    
+    function getBeautyList($args){
+		$posts = get_posts(
+			array(
+				'post_type'=>'ait-dir-item',
+				'numberposts'=>10,
+				'offset'=>0,
+				'post_status'=> 'publish',
+				'tax_query'=>array(
+					array(
+						'taxonomy'=>'ait-dir-item-category',
+						'field'=>'slug',
+						'terms'=>'beauty',
+						'include_children'=>true,
+						'operator'=>'AND'
+					)
+				)
+			)
+		);
+		$beauty_list = array();
+		if ($posts){
+			$term_list = array(
+				'ait-dir-item-location',
+				'purpose',
+				'culture',
+				'dishes',
+				'facility',
+				'timeframe',
+				'capacity',
+				'avgprice'
+			);
+			$meta_list = array(
+				'address',
+				'direction',
+				'map',
+				'phone',
+				'url',
+				'servingtime',
+				'holiday',
+				'est',
+				'features'
+			);
+			global $wpdb;
+			foreach($posts as $post){
+				$beauty = array(
+					'id' => $post->ID,
+					'name' => $post->post_title,
+					'thumbnail' => wp_get_attachment_image_src(get_post_meta($post->ID, '_thumbnail_id', true),'thumbnail',true),
+					'featured_img' => wp_get_attachment_image_src(get_post_meta($post->ID, '_thumbnail_id', true),'full',true),
+					'content' => $post->post_content
+				);
+				foreach ($term_list as $term){
+					$term_sql = "select term.name from $wpdb->terms term, $wpdb->term_taxonomy tax, $wpdb->term_relationships r where term.term_id = tax.term_id and tax.term_taxonomy_id = r.term_taxonomy_id and r.object_id = $post->ID and tax.taxonomy = '$term'";
+					$term_val = $wpdb->get_results($term_sql);
+					// $term_val = wp_get_post_terms($post->ID, $term, array('fields' => 'names'));
+					$beauty[$term] = $term_val[0];
+					if ($term == 'ait-dir-item-location'){
+						$beauty['area'] = $term_val[0]->name;
+					} else {
+						$beauty[$term] = $term_val[0]->name;
+					}
+				}
+				foreach ($meta_list as $meta){
+					$beauty[$meta] = get_post_meta($post->ID, 'pg_restaurant_' . $meta, true);
+				}
+				$events = get_posts(array('post_type'=>array('ait-dir-event'),'meta_key'=>'pg_event_venue','meta_value'=>$post->ID,'numberposts'=>5));
+				$beauty['events'] = array();
+				foreach($events as $event){
+					array_push($beauty['events'],array(
+						'id' => $event->ID,
+						'name' => $event->post_title,
+						'url' => $event->guid
+					));
+				}
+				
+				$$beauty_info_option = get_post_meta($post->ID, '_ait-dir-item', true);
+				$beauty['address'] = $$beauty_info_option['address'];
+				$beauty['url'] = $beauty_info_option['web'];
+				$beauty['phone'] = $beauty_info_option['telephone'];
+				$beauty['latitude'] = $beauty_info_option['gpsLatitude'];
+				$beauty['longitude'] = $beauty_info_option['gpsLongitude'];
+				$beauty['type'] = 'beauty';
+				
+				array_push($beauty_list,$beauty);
+			}
+		}
+		return $beauty_list;
+	}
+
+	function getBeauty($args){
+		$this->escape( $args );
+		$post_id = $args;
+		$post = get_post($post_id);
+		$beauty = false;
+		if ($post){
+			$term_list = array(
+				'ait-dir-item-location',
+				'purpose',
+				'culture',
+				'dishes',
+				'facility',
+				'timeframe',
+				'capacity',
+				'avgprice'
+			);
+			$meta_list = array(
+				'address',
+				'direction',
+				'map',
+				'phone',
+				'url',
+				'servingtime',
+				'holiday',
+				'est',
+				'features'
+			);
+			$beauty = array(
+				'id' => $post->ID,
+				'name' => $post->post_title,
+				'thumbnail' => wp_get_attachment_image_src(get_post_meta($post->ID, '_thumbnail_id', true),'thumbnail',true),
+				'featured_img' => wp_get_attachment_image_src(get_post_meta($post->ID, '_thumbnail_id', true),'full',true),
+				'content' => $post->post_content
+			);
+			global $wpdb;
+			foreach ($term_list as $term){
+				$term_sql = "select term.name from $wpdb->terms term, $wpdb->term_taxonomy tax, $wpdb->term_relationships r where term.term_id = tax.term_id and tax.term_taxonomy_id = r.term_taxonomy_id and r.object_id = $post->ID and tax.taxonomy = '$term'";
+				$term_val = $wpdb->get_results($term_sql);
+				// $term_val = wp_get_post_terms($post->ID, $term, array('fields' => 'names'));
+				$beauty[$term] = $term_val[0];
+				if ($term == 'ait-dir-item-location'){
+					$beauty['area'] = $term_val[0]->name;
+				} else {
+					$beauty[$term] = $term_val[0]->name;
+				}
+			}
+			foreach ($meta_list as $meta){
+				$beauty[$meta] = get_post_meta($post->ID, 'pg_beauty_' . $meta, true);
+			}
+			$events = get_posts(array('post_type'=>array('ait-dir-event'),'meta_key'=>'pg_event_venue','meta_value'=>$post->ID,'numberposts'=>5));
+			$beauty['events'] = array();
+			foreach($events as $event){
+				array_push($beauty['events'],array(
+					'id' => $event->ID,
+					'name' => $event->post_title,
+					'url' => $event->guid
+				));
+			}
+			
+			$$beauty_info_option = get_post_meta($post->ID, '_ait-dir-item', true);
+			$beauty['address'] = $beauty_info_option['address'];
+			$beauty['url'] = $beauty_info_option['web'];
+			$beauty['phone'] = $beauty_info_option['telephone'];
+			$beauty['latitude'] = $beauty_info_option['gpsLatitude'];
+			$beauty['longitude'] = $beauty_info_option['gpsLongitude'];
+			$beauty['type'] = 'beauty';
+		}
+		return $beauty;
+	}
+    
 	function getClubList($args){
 		$posts = get_posts(
 			array(
@@ -850,7 +1114,7 @@ class WP_JSON_RPC_Server extends IXR_Server
 	
 	function search($args){
 		$this->escape($args);
-		$s = $args;
+		$s = urldecode($args);
 		$query = array(
 			'post_type'=>array('ait-dir-item','ait-dir-event'),
 			'numberposts'=>10,
@@ -862,6 +1126,7 @@ class WP_JSON_RPC_Server extends IXR_Server
 		$posts = get_posts($query);
 		
 		$search_results = array();
+
 		foreach ($posts as $post){
 			if ($post->post_type == 'ait-dir-event'){
 				$place = $this->getEvent($post->ID);
@@ -922,34 +1187,67 @@ class WP_JSON_RPC_Server extends IXR_Server
 	}
 	
 	function getFilter($agrs){
-		$taxonomies = array(
-			'ait-dir-item-category',
-			'ait-dir-item-location',
-			'purpose',
-			'culture',
-			'dishes',
-			'facility',
-			'timeframe',
-			'avgprice',
-			'capacity',
-			'event_types',
-			'ticketprice'
-		);
+	   if (empty($agrs)) { // first
+	       $taxonomies = array(
+            'ait-dir-item-category',
+            'ait-dir-item-location'
+           );
+	   } else { //
+            $category = ($agrs[0] != '__NULL__')?$agrs[0]:'';
+            $location = ($agrs[1] != '__NULL__')?$agrs[1]:'';
+            if (in_array($category, array('4'))) { // choi : karaoke/bar/club
+                $taxonomies = array(
+        			'ait-dir-item-category',
+        			'ait-dir-item-location',
+        			'entertainment_industry',
+        			'music_style'
+        		);
+            }
+            if (in_array($category, array('3'))) { // Nha hang/ cafe
+                $taxonomies = array(
+        			'ait-dir-item-category',
+        			'ait-dir-item-location',
+        			'culture',
+        			'avgprice'
+        		);
+            }
+            if (in_array($category, array('71', '107', '108'))) { // shows/xem
+                $taxonomies = array(
+        			'ait-dir-item-category',
+        			'ait-dir-item-location',
+        			'watching_type'
+        		);
+            }
+            if (in_array($category, array('5'))) { // mua sam
+                $taxonomies = array(
+        			'ait-dir-item-category',
+        			'ait-dir-item-location',
+        			'merchandise'
+        		);
+            }
+            if (in_array($category, array('109'))) { // Dep
+                $taxonomies = array(
+        			'ait-dir-item-category',
+        			'ait-dir-item-location',
+        			'beauty_service'
+        		);
+            }
+	   }
 		
 		$terms = array();
 		foreach ($taxonomies as $tax){
-			$terms[$tax] = get_terms($tax);
+			$terms[$tax] = get_terms($tax); 
 			$terms['tax_names'][$tax] = get_taxonomy($tax)->label;
 		}
 		return $terms;
 	}
 	
-	function doFilter($args){
+	function doFilter($agrs){
 		$tax_query = array();
 		$query = array(
-			'post_type'=>$args->post_type
+			'post_type'=>$agrs->post_type,
 		);
-		foreach ($args as $taxonomy => $terms ) {
+		foreach ($agrs as $taxonomy => $terms ) {
 			if ($taxonomy != 'post_type'){
 				$query['tax_query'][] = array(
 					'taxonomy' => $taxonomy,
@@ -961,9 +1259,10 @@ class WP_JSON_RPC_Server extends IXR_Server
 			}
 		}
 		$posts = get_posts($query);
+        
 		$filter_results = array();
 		foreach ($posts as $post){
-			$category = wp_get_post_terms($post->ID,'ait-dir-item-category',array('fields'=>'slugs'));
+			$category = wp_get_post_terms($post->ID,'ait-dir-item-category',array('fields'=>'slugs'));var_dump($category[0]);exit;
 			switch ($category[0]){
 				case 'nha-hang':
 					$place = $this->getRestaurant($post->ID);
@@ -980,6 +1279,14 @@ class WP_JSON_RPC_Server extends IXR_Server
 					$place['type'] = 'restaurant';
 					array_push($filter_results,$place);
 					break;
+                default: {
+                    if (in_array($category[0], array('xem', 'beauty', 'shows', 'cinemas'))) {
+                        $place = $this->getWatching($post->ID);
+                        $place['type'] = 'watching';
+                        array_push($search_results,$place);
+                    }
+                    break;
+                }
 			}
 		}
 		return $filter_results;
@@ -1144,27 +1451,62 @@ class WP_JSON_RPC_Server extends IXR_Server
 		);
 		
 		$posts = get_posts($query);
+
 		$search_results = array();
 		foreach ($posts as $post){
 			$optionsDir = get_post_meta($post->ID, '_ait-dir-item', true);
-			if (isPointInRadius($radius, $latitude, $longitude, $optionsDir['gpsLatitude'], $optionsDir['gpsLongitude'])){
+            //$distance = isPointInRadius($radius, $latitude, $longitude, $optionsDir['gpsLatitude'], $optionsDir['gpsLongitude']);
+            $distance = getDistance($radius, $latitude, $longitude, $optionsDir['gpsLatitude'], $optionsDir['gpsLongitude']);
+			if ($distance){ // not false
+            //get events with exp_date <= 7
+                $query_event = array(
+                    'post_type' => 'ait-dir-event',
+                    'numberposts' => -1,
+                    'offset' => 0,
+                    'meta_value' => $post->ID,
+                    'post_status' => 'publish'
+                );
+                $events = get_posts($query_event);
+                foreach ($events as $event) {
+                    $optionEvent = get_post_meta($event->ID);
+                    $exp_date = $event->pg_event_expire_date;
+                    $curr_date = date('Y-m-d');
+                    $days = floor( (abs(strtotime($exp_date) - strtotime($curr_date)))/(60*60*24) );
+                    if ($days >= 0 && $days <= 7) {
+                        $place = $this->getEvent($event->ID);
+                        $place['distance'] = $distance;
+                        array_push($search_results, $place);
+                    }
+                }
 				$category = wp_get_post_terms($post->ID,'ait-dir-item-category',array('fields'=>'slugs'));
 				switch ($category[0]){
 					case 'nha-hang':
 						$place = $this->getRestaurant($post->ID);
 						$place['type'] = 'restaurant';
+                        $place['distance'] = $distance;
 						array_push($search_results,$place);
 						break;
 					case 'mua-sam':
 						$place = $this->getShopping($post->ID);
 						$place['type'] = 'shopping';
+                        $place['distance'] = $distance;
 						array_push($search_results,$place);
 						break;
 					case 'barsclubs':
 						$place = $this->getClub($post->ID);
 						$place['type'] = 'club';
+                        $place['distance'] = $distance;
 						array_push($search_results,$place);
 						break;
+                    default: {
+                        if (in_array($category[0], array('xem', 'beauty', 'shows', 'cinemas'))) {
+                            $place = $this->getWatching($post->ID);
+                            $place['type'] = 'watching';
+                            $place['distance'] = $distance;
+                            array_push($search_results,$place);
+                        }
+                        break;
+                    }
 				}
 			}
 		}

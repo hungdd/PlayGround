@@ -356,6 +356,131 @@ $args = array(
 
 register_taxonomy( 'ticketprice', 'ait-dir-event', $args );
 
+//entertainment_industry
+$labels = array(
+    'name'                          => __( 'Dịch vụ giải trí', 'site5framework' ),
+    'singular_name'                 => __( 'Dịch vụ giải trí', 'site5framework' ),
+    'search_items'                  => __( 'Tìm kiếm ', 'site5framework' ),
+    'popular_items'                 => __( 'Dịch vụ giải trí phổ biến', 'site5framework' ),
+    'all_items'                     => __( 'Tất cả Dịch vụ giải trí', 'site5framework' ),
+    'parent_item'                   => __( 'Dịch vụ giải trí cấp cha', 'site5framework' ),
+    'edit_item'                     => __( 'Sửa Dịch vụ giải trí', 'site5framework' ),
+    'update_item'                   => __( 'Cập nhật Dịch vụ giải trí', 'site5framework' ),
+    'add_new_item'                  => __( 'Thêm Dịch vụ giải trí', 'site5framework' ),
+    'new_item_name'                 => __( 'Dịch vụ giải trí mới', 'site5framework' ),
+    'separate_items_with_commas'    => __( 'Phân cách Dịch vụ giải trí bằng dấu phẩy (,)', 'site5framework' ),
+    'add_or_remove_items'           => __( 'Thêm/bớtDịch vụ giải trí', 'site5framework' ),'',
+    'choose_from_most_used'         => __( 'Chọn trong danh sách Dịch vụ giải trí phổ biến', 'site5framework' )
+);
+
+$args = array(
+    'label'                         => __( 'Dịch vụ giải trí', 'site5framework' ),
+    'labels'                        => $labels,
+    'public'                        => true,
+    'hierarchical'                  => true,
+    'show_ui'                       => true,
+    'show_in_nav_menus'             => true,
+    'args'                          => array( 'orderby' => 'term_order' ),
+    'rewrite'                       => array( 'slug' => 'entertainment_industry', 'with_front' => false ),
+    'query_var'                     => 'entertainment_industry'
+);
+
+register_taxonomy( 'entertainment_industry', 'ait-dir-item', $args );
+
+//music_style
+$labels = array(
+    'name'                          => __( 'Thể loại nhạc', 'site5framework' ),
+    'singular_name'                 => __( 'Thể loại nhạc', 'site5framework' ),
+    'search_items'                  => __( 'Tìm kiếm Thể loại nhạc', 'site5framework' ),
+    'popular_items'                 => __( 'Thể loại nhạc phổ biến', 'site5framework' ),
+    'all_items'                     => __( 'Tất cả Thể loại nhạc', 'site5framework' ),
+    'parent_item'                   => __( 'Thể loại nhạc cấp cha', 'site5framework' ),
+    'edit_item'                     => __( 'Sửa Thể loại nhạc', 'site5framework' ),
+    'update_item'                   => __( 'Cập nhật Thể loại nhạc', 'site5framework' ),
+    'add_new_item'                  => __( 'Thêm Thể loại nhạc', 'site5framework' ),
+    'new_item_name'                 => __( 'Thể loại nhạc mới', 'site5framework' ),
+    'separate_items_with_commas'    => __( 'Phân cách Thể loại nhạc bằng dấu phẩy (,)', 'site5framework' ),
+    'add_or_remove_items'           => __( 'Thêm/bớt Thể loại nhạc', 'site5framework' ),'',
+    'choose_from_most_used'         => __( 'Chọn trong danh sách Thể loại nhạc phổ biến', 'site5framework' )
+);
+
+$args = array(
+    'label'                         => __( 'Thể loại nhạc', 'site5framework' ),
+    'labels'                        => $labels,
+    'public'                        => true,
+    'hierarchical'                  => true,
+    'show_ui'                       => true,
+    'show_in_nav_menus'             => true,
+    'args'                          => array( 'orderby' => 'term_order' ),
+    'rewrite'                       => array( 'slug' => 'music_style', 'with_front' => false ),
+    'query_var'                     => 'music_style'
+);
+
+register_taxonomy( 'music_style', 'ait-dir-item', $args );
+
+//beauty_service
+$labels = array(
+    'name'                          => __( 'Dịch vụ làm đẹp', 'site5framework' ),
+    'singular_name'                 => __( 'Dịch vụ làm đẹp', 'site5framework' ),
+    'search_items'                  => __( 'Tìm kiếm Dịch vụ làm đẹp', 'site5framework' ),
+    'popular_items'                 => __( 'Dịch vụ làm đẹp phổ biến', 'site5framework' ),
+    'all_items'                     => __( 'Tất cả Dịch vụ làm đẹp', 'site5framework' ),
+    'parent_item'                   => __( 'Dịch vụ làm đẹp cấp cha', 'site5framework' ),
+    'edit_item'                     => __( 'Sửa Dịch vụ làm đẹp', 'site5framework' ),
+    'update_item'                   => __( 'Cập nhật Dịch vụ làm đẹp', 'site5framework' ),
+    'add_new_item'                  => __( 'Thêm Dịch vụ làm đẹp', 'site5framework' ),
+    'new_item_name'                 => __( 'Dịch vụ làm đẹp mới', 'site5framework' ),
+    'separate_items_with_commas'    => __( 'Phân cách Dịch vụ làm đẹp bằng dấu phẩy (,)', 'site5framework' ),
+    'add_or_remove_items'           => __( 'Thêm/bớt Dịch vụ làm đẹp', 'site5framework' ),'',
+    'choose_from_most_used'         => __( 'Chọn trong danh sách Dịch vụ làm đẹp phổ biến', 'site5framework' )
+);
+
+$args = array(
+    'label'                         => __( 'Dịch vụ làm đẹp', 'site5framework' ),
+    'labels'                        => $labels,
+    'public'                        => true,
+    'hierarchical'                  => true,
+    'show_ui'                       => true,
+    'show_in_nav_menus'             => true,
+    'args'                          => array( 'orderby' => 'term_order' ),
+    'rewrite'                       => array( 'slug' => 'beauty_service', 'with_front' => false ),
+    'query_var'                     => 'beauty_service'
+);
+
+register_taxonomy( 'beauty_service', 'ait-dir-item', $args );
+
+
+//watching_type
+$labels = array(
+    'name'                          => __( 'Loại hình để xem', 'site5framework' ),
+    'singular_name'                 => __( 'Loại hình để xem', 'site5framework' ),
+    'search_items'                  => __( 'Tìm kiếm Loại hình để xem', 'site5framework' ),
+    'popular_items'                 => __( 'Loại hình để xem phổ biến', 'site5framework' ),
+    'all_items'                     => __( 'Tất cả Loại hình để xem', 'site5framework' ),
+    'parent_item'                   => __( 'Loại hình để xem cấp cha', 'site5framework' ),
+    'edit_item'                     => __( 'Sửa Loại hình để xem', 'site5framework' ),
+    'update_item'                   => __( 'Cập nhật Loại hình để xem', 'site5framework' ),
+    'add_new_item'                  => __( 'Thêm Loại hình để xem', 'site5framework' ),
+    'new_item_name'                 => __( 'Loại hình để xem mới', 'site5framework' ),
+    'separate_items_with_commas'    => __( 'Phân cách Loại hình để xem bằng dấu phẩy (,)', 'site5framework' ),
+    'add_or_remove_items'           => __( 'Thêm/bớt Loại hình để xem', 'site5framework' ),'',
+    'choose_from_most_used'         => __( 'Chọn trong danh sách Loại hình để xem phổ biến', 'site5framework' )
+);
+
+$args = array(
+    'label'                         => __( 'Loại hình để xem', 'site5framework' ),
+    'labels'                        => $labels,
+    'public'                        => true,
+    'hierarchical'                  => true,
+    'show_ui'                       => true,
+    'show_in_nav_menus'             => true,
+    'args'                          => array( 'orderby' => 'term_order' ),
+    'rewrite'                       => array( 'slug' => 'watching_type', 'with_front' => false ),
+    'query_var'                     => 'watching_type'
+);
+
+register_taxonomy( 'watching_type', 'ait-dir-item', $args );
+
 function aitDirItemPostType()
 {
 	register_post_type( 'ait-dir-item',

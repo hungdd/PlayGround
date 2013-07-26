@@ -7,6 +7,7 @@ var db;
 var user_phone_number = '';
 var msgList = [];
 var contactList = [];
+var is_device_ready = false;
 var photoGallery = [];
 var videoGallery = [];
 
@@ -18,6 +19,7 @@ $(document).bind('mobileinit', function(){
 	currentUser = {phone_number:'',id:-1};
 	contactList = [];
 	msgList = [];
+	is_device_ready = false;
 	photoGallery = [];
 	videoGallery = [];
 	
@@ -251,6 +253,9 @@ $(document).on('pageshow',function(){
 });
 
 function getContacts(){
+	if (!is_device_ready){
+		return;
+	}
 	var options = new ContactFindOptions();
 	options.filter = "";
 	options.multiple = true;
@@ -294,4 +299,13 @@ function updateMessageSenderName(){
 		});
 		msg.contact_name = contact_name;
 	});
+}
+
+//hungdd
+function isNullOrEmpty(obj, strReplaceTo) {
+    if (strReplaceTo == null || strReplaceTo == undefined) strReplaceTo = "";
+    if (obj == null || obj == undefined || obj == "")
+        return strReplaceTo;
+    else
+        return obj.toString();
 }

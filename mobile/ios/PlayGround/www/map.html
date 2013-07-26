@@ -14,6 +14,29 @@
 	</div><!-- /content -->
 	
 	<script type="text/javascript">
+		function displayMap(post){
+			$('li#postname').html(post.name);
+			$('li.mapembed').html(post.map);
+			$('li#address').html(post.address);
+
+			var map;
+			var latlng = new google.maps.LatLng(post.latitude, post.longitude);
+			var mapOptions = {
+				zoom: 15,
+				center: latlng,
+				mapTypeControl: false,
+				navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL},
+				mapTypeId: google.maps.MapTypeId.ROADMAP
+			};
+			map = new google.maps.Map(document.getElementById('detailmap'),mapOptions);
+
+			var marker = new google.maps.Marker({
+				position: latlng,
+				map: map, 
+				title: post.name
+			});
+		}
+		
 		$('div#eventdetailpage').on('pageshow',function(){
 			var post_id = getUrlVars().post_id;
 			var post = false;
@@ -26,30 +49,20 @@
 				});
 			}
 
-			$('li#postname').html(post.name);
-			$('li.mapembed').html(post.map);
-			$('li#address').html(post.address);
-			
-			var map;
-			var latlng = new google.maps.LatLng(post.latitude, post.longitude);
-			var mapOptions = {
-				zoom: 15,
-				center: latlng,
-				mapTypeControl: false,
-				navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL},
-				mapTypeId: google.maps.MapTypeId.ROADMAP
-			};
-			map = new google.maps.Map(document.getElementById('detailmap'),mapOptions);
-			
-			var marker = new google.maps.Marker({
-				position: latlng,
-				map: map, 
-				title: post.name
-			});
-
-			
-			var section = getUrlVars().section;
-			$('a#' + section + 'pagelink').addClass('ui-btn-active').addClass('ui-state-persist');
+			if (post){
+				displayMap(post);
+			} else {
+				wpJSON.request(
+				   'pg.getPost',
+				   {'post_id':post_id},
+				   function (result) {
+						displayMap(result);
+				   },
+				   function( code, error, data ) {
+						console.log('error: ' + error);
+				   }
+				);
+			}
 		});
 	</script>
 </div><!-- /page#eventlist -->

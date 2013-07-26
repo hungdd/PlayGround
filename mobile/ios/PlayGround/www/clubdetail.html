@@ -13,13 +13,13 @@
 		<ul data-role="listview" data-inset="true">
 			<li data-role="fieldcontain">
 				<a id="weblink" class="external">
-					<h2 id="phone"></h2>
+					<h2 id="phone" class="icon_phone"></h2>
 					<p id="url"></p>
 				</a>
 			</li>
 			<li data-role="fieldcontain">
 				<a id="maplink">
-					<h2 id="address"></h2>
+					<h2 id="address" class="icon_address"></h2>
 					<p id="direction"></p>
 				</a>
 			</li>
@@ -34,9 +34,9 @@
 		</ul>
 		
 		<ul data-role="listview" data-inset="true" id="attributes" data-theme="d" class="postcontent">
-			<li data-role="fieldcontain" id="area"></li>
-			<li data-role="fieldcontain" id="timeframe"></li>
-			<li data-role="fieldcontain" id="avgprice"></li>
+			<li data-role="fieldcontain" class="icon_location" id="area" style="padding-left:30px;"></li>
+			<li data-role="fieldcontain" class="icon_clock" id="timeframe" style="padding-left:30px;"></li>
+			<li data-role="fieldcontain" class="icon_money" id="avgprice" style="padding-left:30px;"></li>
 			<!-- <li data-role="fieldcontain" id="capacity"></li>
 			<li data-role="fieldcontain" id="holiday"></li>
 			<li data-role="fieldcontain" id="est"></li> -->
@@ -61,9 +61,9 @@
 				$('p#direction').html(cached_post.direction);
 				$('li#content').html(cached_post.content.replace("\n",'<br/><br/>'));
 				$('a#maplink').attr('href','map.html?post_id=' + post_id + '&section=club');
-				$('li#area').html('<strong>Khu vực</strong> ' + cached_post.area);
-				$('li#timeframe').html('<strong>Thời gian phục vụ: </strong> ' + cached_post.timeframe);
-				$('li#avgprice').html('<strong>Mức giá trung bình: </strong> ' + cached_post.avgprice);
+				$('li#area').html('<strong>Khu vực:</strong> ' + isNullOrEmpty(cached_post.area, "Đang cập nhật"));
+				$('li#timeframe').html('<strong>Thời gian phục vụ: </strong> ' + isNullOrEmpty(cached_post.timeframe, "Đang cập nhật"));
+				$('li#avgprice').html('<strong>Mức giá trung bình: </strong> ' + isNullOrEmpty(cached_post.avgprice, "Đang cập nhật"));
 				// $('li#capacity').html('<strong>Sức chứa</strong> ' + cached_post.capacity);
 				// $('li#holiday').html('<strong>Nghỉ lễ:</strong> ' + cached_post.holiday);
 				// $('li#est').html('<strong>Thành lập năm</strong> ' + cached_post.est);
